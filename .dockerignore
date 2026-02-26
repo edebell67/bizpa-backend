@@ -1,0 +1,10 @@
+node_modules/
+frontend/
+app/
+builds/
+docs/
+.git/
+*.log
+backend/node_modules/
+backend/uploads/
+.env
