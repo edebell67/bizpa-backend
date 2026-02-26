@@ -33,8 +33,8 @@ import {
 import { SpeechRecognition } from '@capacitor-community/speech-recognition';
 import { Preferences } from '@capacitor/preferences';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || `http://192.168.1.110:5055/api/v1`;
-// const API_BASE_URL = process.env.REACT_APP_API_URL || `https://bizpa-api.onrender.com/api/v1`;
+// const API_BASE_URL = process.env.REACT_APP_API_URL || `http://192.168.1.110:5055/api/v1`;
+const API_BASE_URL = process.env.REACT_APP_API_URL || `https://bizpa-api.onrender.com/api/v1`;
 
 const USERS = [
   { id: '00000000-0000-0000-0000-000000000000', name: 'Default User', icon: '👤', email: 'default@bizpa.local' },
@@ -554,9 +554,13 @@ function App() {
       setVoiceStatus('idle');
       return;
     }
+    
+    // Fix common encoding issues (e.g., UTF-8 £ interpreted as CP437/Win1252 ┬ú)
+    const cleanText = text.replace(/┬ú/g, '£');
+    
     try {
       const res = await axios.post(`${API_BASE_URL}/voice/process`, {
-        transcript: text,
+        transcript: cleanText,
         device_id: 'web-browser-001'
       });
       setFeedback(res.data);
@@ -1468,7 +1472,7 @@ function App() {
       <header className="d-flex justify-content-between align-items-center mb-4">
         <h1 className="fw-bold m-0 d-flex align-items-center gap-2" style={{color: 'var(--primary)', letterSpacing: '-1px'}} onClick={() => setCurrentTab('home')}>
           bizPA 
-          <span className="badge bg-warning text-dark" style={{fontSize: '0.6rem'}}>v1.1.9</span>
+          <span className="badge bg-warning text-dark" style={{fontSize: '0.6rem'}}>v1.2.1</span>
           <button className="btn btn-link p-0 text-muted" onClick={(e) => { e.stopPropagation(); fetchAllData(); }}>
             <RefreshCcw size={14} className={loading ? 'spinner' : ''} />
           </button>
@@ -1511,13 +1515,17 @@ function App() {
         </div>
       </header>
 
-      {connectionError && (
-        <div className="alert alert-danger mx-3 rounded-4 d-flex align-items-center gap-2 shadow-sm border-0">
-          <AlertCircle size={18} /> {connectionError}
-        </div>
-      )}
-
-      {loading ? (
+            {connectionError && (
+              <div className="alert alert-danger mx-3 rounded-4 shadow-sm border-0">
+                <div className="d-flex align-items-center gap-2 mb-2">
+                  <AlertCircle size={18} /> <span className="fw-bold">{connectionError}</span>
+                </div>
+                <div className="small opacity-75 pt-2 border-top border-danger border-opacity-10">
+                  Target: <code>{API_BASE_URL}</code>
+                </div>
+              </div>
+            )}
+            {loading ? (
         <div className="text-center py-5"><div className="spinner-border text-primary"></div></div>
       ) : (
         <div className="container py-4" style={{paddingBottom: '160px'}}>

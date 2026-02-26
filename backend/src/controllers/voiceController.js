@@ -9,7 +9,12 @@ const itemController = require('./itemController');
  */
 function parseIntent(transcript) {
   // Normalize text: lowercase, trim, and remove basic punctuation (but KEEP dots for decimals!)
-  const text = transcript.toLowerCase().trim().replace(/[?!,]/g, '');
+  let text = transcript.toLowerCase().trim();
+  
+  // Fix common encoding issues (e.g., UTF-8 £ interpreted as CP437/Win1252 ┬ú)
+  text = text.replace(/┬ú/g, '£');
+  text = text.replace(/[?!,]/g, '');
+  
   console.log(`[VoiceController] Normalizing text: "${text}"`);
   
   let intent = 'misc';
