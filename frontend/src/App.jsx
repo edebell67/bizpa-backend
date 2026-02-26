@@ -33,8 +33,8 @@ import {
 import { SpeechRecognition } from '@capacitor-community/speech-recognition';
 import { Preferences } from '@capacitor/preferences';
 
-// const API_BASE_URL = process.env.REACT_APP_API_URL || `http://192.168.1.110:5055/api/v1`;
-const API_BASE_URL = process.env.REACT_APP_API_URL || `https://bizpa-api.onrender.com/api/v1`;
+const API_BASE_URL = process.env.REACT_APP_API_URL || `http://192.168.1.110:5055/api/v1`;
+// const API_BASE_URL = process.env.REACT_APP_API_URL || `https://bizpa-api.onrender.com/api/v1`;
 
 const USERS = [
   { id: '00000000-0000-0000-0000-000000000000', name: 'Default User', icon: '👤', email: 'default@bizpa.local' },
