@@ -33,7 +33,8 @@ import {
 import { SpeechRecognition } from '@capacitor-community/speech-recognition';
 import { Preferences } from '@capacitor/preferences';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || `http://192.168.1.110:5055/api/v1`;
+const API_BASE_URL = process.env.REACT_APP_API_URL || `https://wet-months-call.loca.lt/api/v1`;
+// const API_BASE_URL = process.env.REACT_APP_API_URL || `http://192.168.1.110:5055/api/v1`;
 // const API_BASE_URL = process.env.REACT_APP_API_URL || `https://bizpa-api.onrender.com/api/v1`;
 
 const USERS = [
@@ -348,6 +349,9 @@ function App() {
   // Handle Authentication and Data Fetching
   useEffect(() => {
     const syncSession = async () => {
+      // Bypass Localtunnel reminder page
+      axios.defaults.headers.common['Bypass-Tunnel-Reminder'] = 'true';
+
       if (authToken) {
         axios.defaults.headers.common['Authorization'] = `Bearer ${authToken}`;
       } else {
@@ -1484,6 +1488,9 @@ function App() {
            <button className="btn btn-light rounded-circle p-2 me-3" onClick={toggleTheme}>
              {theme === 'light' ? <Moon size={20} className="text-muted" /> : <Sun size={20} className="text-warning" />}
            </button>
+           <button className="btn btn-light rounded-circle p-2 me-3" onClick={fetchAllData} title="Refresh Data">
+             <RefreshCcw size={20} className={loading ? 'spinner' : 'text-muted'} />
+           </button>
            <div className="position-relative me-3">
               <Bell className={notifications.length > 0 ? "text-danger" : "text-muted"} />
               {notifications.length > 0 && <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style={{fontSize: '0.6rem'}}>{notifications.length}</span>}
@@ -1517,8 +1524,13 @@ function App() {
 
             {connectionError && (
               <div className="alert alert-danger mx-3 rounded-4 shadow-sm border-0">
-                <div className="d-flex align-items-center gap-2 mb-2">
-                  <AlertCircle size={18} /> <span className="fw-bold">{connectionError}</span>
+                <div className="d-flex align-items-center justify-content-between mb-2">
+                  <div className="d-flex align-items-center gap-2">
+                    <AlertCircle size={18} /> <span className="fw-bold">{connectionError}</span>
+                  </div>
+                  <button className="btn btn-danger btn-sm rounded-3 px-3 fw-bold" onClick={fetchAllData}>
+                    Retry
+                  </button>
                 </div>
                 <div className="small opacity-75 pt-2 border-top border-danger border-opacity-10">
                   Target: <code>{API_BASE_URL}</code>
