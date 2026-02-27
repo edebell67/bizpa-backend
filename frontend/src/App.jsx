@@ -33,7 +33,8 @@ import {
 import { SpeechRecognition } from '@capacitor-community/speech-recognition';
 import { Preferences } from '@capacitor/preferences';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || `https://wet-months-call.loca.lt/api/v1`;
+const API_BASE_URL = process.env.REACT_APP_API_URL || `https://bizpa-ede-proxy.loca.lt/api/v1`;
+// const API_BASE_URL = process.env.REACT_APP_API_URL || `https://wet-months-call.loca.lt/api/v1`;
 // const API_BASE_URL = process.env.REACT_APP_API_URL || `http://192.168.1.110:5055/api/v1`;
 // const API_BASE_URL = process.env.REACT_APP_API_URL || `https://bizpa-api.onrender.com/api/v1`;
 
@@ -1476,7 +1477,7 @@ function App() {
       <header className="d-flex justify-content-between align-items-center mb-4">
         <h1 className="fw-bold m-0 d-flex align-items-center gap-2" style={{color: 'var(--primary)', letterSpacing: '-1px'}} onClick={() => setCurrentTab('home')}>
           bizPA 
-          <span className="badge bg-warning text-dark" style={{fontSize: '0.6rem'}}>v1.2.1</span>
+          <span className="badge bg-warning text-dark" style={{fontSize: '0.6rem'}}>v1.2.3</span>
           <button className="btn btn-link p-0 text-muted" onClick={(e) => { e.stopPropagation(); fetchAllData(); }}>
             <RefreshCcw size={14} className={loading ? 'spinner' : ''} />
           </button>

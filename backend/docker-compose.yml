@@ -1,0 +1,16 @@
+services:
+  bizpa-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5055:5055"
+    environment:
+      - NODE_ENV=development
+      - PORT=5055
+      - DATABASE_URL=postgres://postgres:0UyEe0eybNGuz7bZ@db.uyqbagglhesgwhayconz.supabase.co:5432/postgres
+      - SUPABASE_URL=https://uyqbagglhesgwhayconz.supabase.co
+      - SUPABASE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV5cWJhZ2dsaGVzZ3doYXljb256Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEyNTY1MDUsImV4cCI6MjA4NjgzMjUwNX0.Avmmv_lmIQchLdJheQ3tapg9whvC3ZLeyxjms6TLNJc
+      - SUPABASE_SERVICE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV5cWJhZ2dsaGVzZ3doYXljb256Iiwicm9sZSI6InVlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MTI1NjUwNSwiZXhwIjoyMDg2ODMyNTA1fQ.XLAB6zuel9-dKHi8qNNXtzZ1IQHM2qD9P78b-dpibVU
+      - JWT_SECRET=bizpa_voice_secret_2026
+    restart: always
