@@ -348,24 +348,30 @@ const uploadImage = async (req, res) => {
 
     const newItem = await createItemInternal(itemData);
 
-    // Upload to Supabase Storage
-    const fileContent = fs.readFileSync(req.file.path);
-    const fileName = `${userId}/${newItem.id}-${req.file.originalname}`;
-    
-    const { data: uploadData, error: uploadError } = await supabase.storage
-      .from(bucketName)
-      .upload(fileName, fileContent, {
-        contentType: req.file.mimetype,
-        upsert: true
-      });
+    let finalPath = req.file.path;
+    let isCloud = false;
 
-    if (uploadError) {
-      console.error('[Supabase Storage] Upload Error:', uploadError);
-      // Fallback: use local path if cloud fails
+    // Upload to Supabase Storage if available
+    if (supabase) {
+      const fileContent = fs.readFileSync(req.file.path);
+      const fileName = `${userId}/${newItem.id}-${req.file.originalname}`;
+      
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from(bucketName)
+        .upload(fileName, fileContent, {
+          contentType: req.file.mimetype,
+          upsert: true
+        });
+
+      if (uploadError) {
+        console.error('[Supabase Storage] Upload Error:', uploadError);
+      } else if (uploadData) {
+        finalPath = uploadData.path;
+        isCloud = true;
+      }
+    } else {
+      console.warn('[Storage] Supabase client not initialized. Saving locally only.');
     }
-
-    const finalPath = uploadData?.path ? uploadData.path : req.file.path;
-    const isCloud = !!uploadData?.path;
 
     // Add attachment
     const attachmentQuery = `

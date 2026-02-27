@@ -31,10 +31,21 @@ const teamRoutes = require('./routes/teamRoutes');
 
 // Middleware
 const userMiddleware = require('./middleware/userMiddleware');
+
+// Custom Network Logger
+app.use((req, res, next) => {
+  console.log(`[NETWORK] ${new Date().toISOString()} | ${req.method} ${req.url} | From: ${req.ip}`);
+  next();
+});
+
 app.use(helmet({
   crossOriginResourcePolicy: false,
 }));
-app.use(cors());
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-User-ID']
+}));
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(userMiddleware);
@@ -81,11 +92,13 @@ setInterval(async () => {
 
 // Health Check
 app.get('/api/health', (req, res) => {
+  const supabase = require('./config/supabase');
   res.status(200).json({
     status: 'UP',
-    version: '1.0.0',
+    version: '1.1.0',
     timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV
+    environment: process.env.NODE_ENV,
+    cloud_storage: supabase ? 'connected' : 'disconnected'
   });
 });
 
